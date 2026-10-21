@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathMaster 10 | Premium Maarif Modeli</title>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-card: #ffffff;
+  --primary: #10b981;
+  --primary-glow: rgba(16, 185, 129, 0.3);
+  --accent: #3b82f6;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 16px;
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #f8fafc;
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+/* APP HEADER */
+.app-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.app-header::after {
+  content: "";
+  position: absolute;
+  width: 300px; height: 300px;
+  background: var(--primary-glow);
+  border-radius: 50%;
+  top: -100px; right: -100px;
+  filter: blur(50px);
+}
+.badge-pro {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+.app-header h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  letter-spacing: -0.03em;
+}
+.app-header p {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* CONTAINER & LAYOUT */
+.app-container {
+  max-width: 1000px;
+  margin: -30px auto 40px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.search-box {
+  background: white;
+  padding: 15px 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  border: 1px solid var(--border);
+}
+.search-box input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+/* THEME CARDS */
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.theme-card {
+  background: var(--surface-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.theme-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 30px -10px rgba(0,0,0,0.08);
+}
+.theme-header {
+  padding: 24px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.theme-title-area h3 {
+  margin: 0 0 5px;
+  font-size: 20px;
+  color: #0f172a;
+}
+.theme-title-area p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.theme-icon {
+  width: 50px; height: 50px;
+  background: #ecfdf5;
+  color: var(--primary);
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.topic-list {
+  padding: 10px 24px 24px;
+}
+.topic-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+}
+.topic-item:last-child { border-bottom: none; }
+.topic-item span {
+  font-weight: 600;
+  font-size: 15px;
+  color: #334155;
+}
+.action-chip {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: background 0.2s;
+}
+.topic-item:hover .action-chip {
+  background: var(--primary);
+  color: white;
+}
+
+/* MODAL / APP POPUP */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.modal-overlay.active { display: flex; }
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 750px;
+  max-height: 90vh;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  padding: 35px;
+  position: relative;
+  transform: translateY(0);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-close {
+  position: absolute;
+  top: 25px; right: 25px;
+  background: #f1f5f9;
+  border: none;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: #475569;
+  transition: background 0.2s;
+}
+.modal-close:hover { background: #e2e8f0; }
+
+.formula-card {
+  background: #f0fdf4;
+  border-left: 4px solid var(--primary);
+  padding: 16px 20px;
+  border-radius: 0 12px 12px 0;
+  margin: 20px 0;
+  font-family: ui-monospace, monospace;
+  font-size: 15px;
+  color: #065f46;
+  font-weight: 600;
+}
+.step-box {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+.step-box strong {
+  color: #b45309;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <span class="badge-pro">✦ Premium Maarif Modeli</span>
+  <h1>10. Sınıf Matematik Sınav Merkezi</h1>
+  <p>Cuma günkü deneme ve sınavlar için özel geliştirilmiş interaktif konu rehberi[cite: 1, 2].</p>
+</header>
+
+<div class="app-container">
+  
+  <div class="search-box">
+    <span style="font-size: 20px;">🔍</span>
+    <input type="text" id="searchInput" placeholder="Hangi konuyu arıyorsun? (Örn: Trigonometri, Parabol, EBOB...)">
+  </div>
+
+  <div class="theme-grid" id="themeGrid">
+
+    <!-- TEMA 1 -->
+    <div class="theme-card" data-keywords="geometrik şekiller dik üçgen trigonometri sinüs kosinüs alan açıortay kenarortay">
+      <div class="theme-header">
+        <div class="theme-title-area">
+          <h3>1. Tema: Geometrik Şekiller</h3>
+          <p>Dik üçgen trigonometrisi, birim çember ve üçgen alan bağıntıları[cite: 1, 2]</p>
+        </div>
+        <div class="theme-icon">△</div>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item" onclick="openModal('modal-trig')">
+          <span>Dik Üçgende Trigonometrik Oranlar & Birim Çember</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+        <div class="topic-item" onclick="openModal('modal-teorem')">
+          <span>Sinüs ve Kosinüs Teoremleri</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+        <div class="topic-item" onclick="openModal('modal-yardimci')">
+          <span>Açıortay, Kenarortay ve Üçgen Merkezleri</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 2 -->
+    <div class="theme-card" data-keywords="istatistik veri kategorik sıklık tablo yorum">
+      <div class="theme-header">
+        <div class="theme-title-area">
+          <h3>2. Tema: İstatistiksel Araştırma Süreci</h3>
+          <p>İki kategorik değişken, çapraz tablolar ve göreli sıklıklar[cite: 1, 2]</p>
+        </div>
+        <div class="theme-icon">📊</div>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item" onclick="openModal('modal-istatistik')">
+          <span>İki Yönlü Sıklık Tabloları & Göreli Sıklık</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 3 -->
+    <div class="theme-card" data-keywords="sayılar asal çarpan bölen ebob ekok bölünebilme kalan">
+      <div class="theme-header">
+        <div class="theme-title-area">
+          <h3>3. Tema: Sayılar</h3>
+          <p>Asal çarpanlar, pozitif bölen sayısı, EBOB-EKOK ve kalanlar[cite: 1, 2]</p>
+        </div>
+        <div class="theme-icon">#</div>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item" onclick="openModal('modal-sayilar')">
+          <span>Bölenler, EBOB-EKOK ve Bölünebilme Kuralları</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 4 -->
+    <div class="theme-card" data-keywords="nicelikler değişimler fonksiyon parabol tepe noktası">
+      <div class="theme-header">
+        <div class="theme-title-area">
+          <h3>4. Tema: Nicelikler ve Değişimler</h3>
+          <p>Fonksiyonlar, grafik yorumlama ve karesel fonksiyonlar (Parabol)[cite: 1, 2]</p>
+        </div>
+        <div class="theme-icon">ƒ</div>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item" onclick="openModal('modal-parabol')">
+          <span>Karesel Fonksiyonlar ve Parabolün Tepe Noktası</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 5 -->
+    <div class="theme-card" data-keywords="sayma algoritma permütasyon kombinasyon akış şeması">
+      <div class="theme-header">
+        <div class="theme-title-area">
+          <h3>5. Tema: Sayma, Algoritma ve Bilişim</h3>
+          <p>Sistematik sayma kuralları, permütasyon-kombinasyon ve akış şemaları[cite: 1, 2]</p>
+        </div>
+        <div class="theme-icon">⌘</div>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item" onclick="openModal('modal-sayma')">
+          <span>Permütasyon, Kombinasyon ve Algoritmik Yapılar</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 6 -->
+    <div class="theme-card" data-keywords="analitik inceleme koordinat düzlemi doğru eğim uzaklık">
+      <div class="theme-header">
+        <div class="theme-title-area">
+          <h3>6. Tema: Analitik İnceleme</h3>
+          <p>Koordinat düzleminde iki nokta arası uzaklık ve doğru denklemleri[cite: 1, 2]</p>
+        </div>
+        <div class="theme-icon">⌖</div>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item" onclick="openModal('modal-analitik')">
+          <span>Noktanın ve Doğrunun Analitiği (Eğim)</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 7 -->
+    <div class="theme-card" data-keywords="veriden olasılığa örnek uzay olay teorik deneysel">
+      <div class="theme-header">
+        <div class="theme-title-area">
+          <h3>7. Tema: Veriden Olasılığa</h3>
+          <p>Örnek uzay, olay çeşitleri ve olasılık hesaplamaları[cite: 1, 2]</p>
+        </div>
+        <div class="theme-icon">◉</div>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item" onclick="openModal('modal-olasilik')">
+          <span>Örnek Uzay ve Olasılık Hesapları</span>
+          <span class="action-chip">İncele →</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= MODALLAR (AÇILIR UYGULAMA PENCERELERİ) ================= -->
+
+<!-- MODAL 1: TRİGONOMETRİ -->
+<div class="modal-overlay" id="modal-trig">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-trig')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">📐 Dik Üçgende Trigonometri & Birim Çember</h2>
+    <p style="color:var(--text-muted)">10. Sınıf 1. Tema Temel Kazanım Anlatımı[cite: 1, 2]</p>
+    <hr style="border:0; border-top:1px solid var(--border);">
+
+    <p>Bir dik üçgende açının konumuna göre kenarlar adlandırılır. Hipotenüs dik açının karşısındaki en uzun kenardır[cite: 1, 2].</p>
+    
+    <div style="text-align:center; background:#f8fafc; padding:20px; border-radius:12px; border:1px solid var(--border); margin:20px 0;">
+      <svg width="260" height="160" viewBox="0 0 260 160">
+        <polygon points="40,130 220,130 220,30" fill="#ecfdf5" stroke="#10b981" stroke-width="3" stroke-linejoin="round"/>
+        <polyline points="200,130 200,110 220,110" fill="none" stroke="#059669" stroke-width="2"/>
+        <text x="65" y="120" font-size="14" font-weight="bold" fill="#059669">α</text>
+        <text x="130" y="150" text-anchor="middle" font-size="12" fill="#334155">Komşu Kenar</text>
+        <text x="230" y="85" text-anchor="start" font-size="12" fill="#334155">Karşı Kenar</text>
+        <text x="110" y="70" font-size="12" font-weight="bold" fill="#047857">Hipotenüs</text>
+      </svg>
+    </div>
+
+    <div class="formula-card">
+      sin(α) = Karşı / Hipotenüs<br>
+      cos(α) = Komşu / Hipotenüs<br>
+      tan(α) = Karşı / Komşu = sin(α) / cos(α)<br>
+      cot(α) = Komşu / Karşı = cos(α) / sin(α)[cite: 1, 2]
+    </div>
+
+    <div class="step-box">
+      <strong>Çözümlü Sınav Örneği:</strong>
+      <p><b>Soru:</b> Hipotenüsü $10$ cm ve $\alpha$ açısının karşısındaki dik kenar $6$ cm olan dik üçgende $\sin\alpha$ ve $\cos\alpha$ değerlerini hesaplayınız[cite: 1, 2].</p>
+      <p><b>Çözüm Adımları:</b><br>
+      1. Pisagor teoremi uygulanarak komşu kenar ($x$) bulunur: $x^2 + 6^2 = 10^2 \implies x = 8$ cm[cite: 1, 2].<br>
+      2. $\sin\alpha = \frac{\text{Karşı}}{\text{Hipotenüs}} = \frac{6}{10} = \frac{3}{5}$[cite: 1, 2].<br>
+      3. $\cos\alpha = \frac{\text{Komşu}}{\text{Hipotenüs}} = \frac{8}{10} = \frac{4}{5}$[cite: 1, 2].</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 2: TEOREMLER -->
+<div class="modal-overlay" id="modal-teorem">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-teorem')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">⚡ Sinüs ve Kosinüs Teoremleri</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <div class="formula-card">
+      Sinüs Teoremi: a / sin(A) = b / sin(B) = c / sin(C) = 2R[cite: 1, 2]<br>
+      Kosinüs Teoremi: a² = b² + c² - 2bc · cos(A)[cite: 1, 2]
+    </div>
+    <p><b>Kullanım Alanı:</b> Üçgen dik üçgen olmadığı durumlarda kenar veya açı hesaplarken bu teoremler kullanılır[cite: 1, 2].</p>
+  </div>
+</div>
+
+<!-- MODAL 3: YARDIMCI ELEMANLAR -->
+<div class="modal-overlay" id="modal-yardimci">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-yardimci')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">📍 Üçgenin Yardımcı Elemanları ve Merkezleri</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <ul>
+      <li><b>İç Açıortay:</b> Karşı kenarı yan kenarlar oranında böler ($BD/DC = AB/AC$)[cite: 1, 2].</li>
+      <li><b>Ağırlık Merkezi (G):</b> Kenarortayların kesişim noktasıdır. Köşeye 2k, tabana k ($2:1$) uzaktadır[cite: 1, 2].</li>
+      <li><b>Çevrel Çemberin Merkezi:</b> Kenar orta dikmelerin kesiştiği noktadır[cite: 1, 2].</li>
+      <li><b>Diklik Merkezi (H):</b> Yüksekliklerin kesişim noktasıdır[cite: 1, 2].</li>
+    </ul>
+  </div>
+</div>
+
+<!-- MODAL 4: İSTATİSTİK -->
+<div class="modal-overlay" id="modal-istatistik">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-istatistik')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">📊 İstatistiksel Araştırma & Çapraz Tablolar</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <p>İki kategorik değişkenin ortak frekanslarını incelemek için iki yönlü sıklık tabloları kurulur[cite: 1, 2].</p>
+    <div class="formula-card">
+      Göreli Sıklık = İlgili Kategori Frekansı / Toplam Gözlem Sayısı[cite: 1, 2]
+    </div>
+    <p><b>Kritik Uyarı:</b> İki değişken arasındaki ilişki (korelasyon) asla doğrudan bir neden-sonuç ilişkisi olarak yorumlanamaz[cite: 1, 2]!</p>
+  </div>
+</div>
+
+<!-- MODAL 5: SAYILAR -->
+<div class="modal-overlay" id="modal-sayilar">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-sayilar')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;"># Sayılar, EBOB-EKOK ve Bölünebilme</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <div class="formula-card">
+      N = p₁ᵃ · p₂ᵇ · p₃ᶜ ise Pozitif Bölen Sayısı = (a+1)(b+1)(c+1)[cite: 1, 2]<br>
+      a · b = EBOB(a,b) · EKOK(a,b)[cite: 1, 2]<br>
+      Bölme Özdeşliği: A = B · q + r (0 ≤ r &lt; B)[cite: 1, 2]
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 6: PARABOL -->
+<div class="modal-overlay" id="modal-parabol">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-parabol')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">ƒ(x) Karesel Fonksiyonlar ve Parabol</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <div class="formula-card">
+      f(x) = ax² + bx + c (a ≠ 0)<br>
+      Tepe Noktası T(r, k): r = -b / (2a), k = f(r)[cite: 1, 2]
+    </div>
+    <p>a &gt; 0 ise kollar yukarı (minimum nokta), a &lt; 0 ise kollar aşağı doğrudur (maksimum nokta)[cite: 1, 2].</p>
+  </div>
+</div>
+
+<!-- MODAL 7: SAYMA -->
+<div class="modal-overlay" id="modal-sayma">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-sayma')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">⌘ Sayma, Kombinasyon ve Algoritmalar</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <div class="formula-card">
+      Permütasyon: P(n,r) = n! / (n-r)![cite: 1, 2]<br>
+      Kombinasyon: C(n,r) = n! / [r!(n-r)!][cite: 1, 2]
+    </div>
+    <p>Akış şemalarında oval (başla/bitir), paralelkenar (giriş/çıkış), dikdörtgen (işlem) ve eşkenar dörtgen (karar) sembolleri kullanılır[cite: 1, 2].</p>
+  </div>
+</div>
+
+<!-- MODAL 8: ANALİTİK -->
+<div class="modal-overlay" id="modal-analitik">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-analitik')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">⌖ Analitik Geometri (Nokta ve Doğru)</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <div class="formula-card">
+      İki Nokta Uzaklık: |AB| = √[(x₂ - x₁)² + (y₂ - y₁)²][cite: 1, 2]<br>
+      Eğim (m) = (y₂ - y₁) / (x₂ - x₁)[cite: 1, 2]<br>
+      Paralel: m₁ = m₂ | Dik: m₁ · m₂ = -1[cite: 1, 2]
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 9: OLASILIK -->
+<div class="modal-overlay" id="modal-olasilik">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-olasilik')">✕</button>
+    <h2 style="margin-top:0; color:#0f172a;">◉ Veriden Olasılığa</h2>
+    <hr style="border:0; border-top:1px solid var(--border);">
+    <div class="formula-card">
+      P(A) = s(A) / s(S)<br>
+      P(A') = 1 - P(A) (Tümleyen Olay)[cite: 1, 2]
+    </div>
+    <p>Deneysel olasılık, deney sonuçlarındaki frekans oranına dayanırken; teorik olasılık matematiksel hesaplamaya dayanır[cite: 1, 2].</p>
+  </div>
+</div>
+
+<footer>
+  <p>MathMaster 10 • Türkiye Yüzyılı Maarif Modeli Dijital Sınav Sistemi[cite: 1, 2]</p>
+</footer>
+
+<script>
+// Modal Açma / Kapatma Fonksiyonları
+function openModal(modalId) {
+  document.getElementById(modalId).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// Canlı Arama Filtresi
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.theme-card');
+  
+  cards.forEach(card => {
+    const keywords = card.getAttribute('data-keywords') || '';
+    const text = card.innerText.toLowerCase();
+    if(text.includes(term) || keywords.includes(term)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+});
+</script>
+
+</body>
+</html>
